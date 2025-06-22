@@ -1,0 +1,32 @@
+services:
+
+  ghostport-relay:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ghostport-relay
+    restart: always
+    env_file:
+      - .env
+    expose:
+      - 2080
+    ports:
+      - ${GHOSTPORT_LOCAL_FORWARD_PORT}:2080
+    command: ghostport-relay.sh
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ghostport-endpoint:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ghostport-endpoint
+    restart: always
+    depends_on:
+      - ghostport-relay
+    env_file:
+      - .env
+    command: ghostport-endpoint.sh
