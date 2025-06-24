@@ -14,10 +14,10 @@ services:
       - ${GHOSTPORT_LOCAL_FORWARD_PORT}:2080
     command: ghostport-relay.sh
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:2080"]
-      interval: 30s
+      test: ["CMD", "netstat", "-tln", "|", "grep", ":2080"]
+      interval: 20s
       timeout: 10s
-      retries: 3
+      retries: 5
 
   ghostport-endpoint:
     build:
@@ -26,9 +26,15 @@ services:
     container_name: ghostport-endpoint
     restart: always
     depends_on:
-      - ghostport-relay
+      ghostport-relay:
+        condition: service_healthy
     env_file:
       - .env
     extra_hosts:
       - host.docker.internal:host-gateway
     command: ghostport-endpoint.sh
+    healthcheck:
+      test: ["CMD", "pgrep", "autossh"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
