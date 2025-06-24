@@ -14,7 +14,8 @@
 1. **ghostport-relay**
    Creates a tunnel from the source server.
 
-   * If `GHOSTPORT_SOURCE_IP=localhost`: acts as a SOCKS5 proxy
+   * If `GHOSTPORT_SOURCE_IP` is localhost and `GHOSTPORT_SOURCE_SERVICE_PORT` is 0 or empty: acts as a SOCKS5 proxy
+   * If `GHOSTPORT_SOURCE_IP` is localhost and `GHOSTPORT_SOURCE_SERVICE_PORT` is not 0 or empty: forwards a port from the host to local
    * Else: forwards a port from the source server to local
 
 2. **ghostport-endpoint**
@@ -80,7 +81,8 @@ GHOSTPORT_TARGET_FORWARD_PORT=2078
 | Mode         | Behavior                                                                 |
 | ------------ | ------------------------------------------------------------------------ |
 | SOCKS Proxy  | Creates a local SOCKS5 proxy via SSH and forwards it to target via relay |
-| Port Forward | Forwards a specific TCP port from source to target via relay             |
+| Host Port Forward  | Forwards a specific TCP port from host to target via relay |
+| Remote Port Forward | Forwards a specific TCP port from source to target via relay             |
 
 To switch between modes, just change the `GHOSTPORT_SOURCE_IP` to localhost or server ip
 

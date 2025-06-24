@@ -29,4 +29,6 @@ services:
       - ghostport-relay
     env_file:
       - .env
+    extra_hosts:
+      - host.docker.internal:host-gateway
     command: ghostport-endpoint.sh
